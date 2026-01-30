@@ -47,15 +47,34 @@ class _HomeScreenState extends State<HomeScreen>{
   final TextEditingController _msgController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text("$messages"), bottomNavigationBar: Row(children: [Expanded(child: TextField(controller: _msgController, onSubmitted: (String input){
-      setState(() {
-        messages.add(input);
-      });
-    },)), IconButton.filled(onPressed: (){
-      setState(() {
-        messages.add(_msgController.text);
-      });
-    }, icon: Icon(Icons.arrow_upward))],),);
+    return Scaffold(
+      body: ListView.builder(
+          itemBuilder: (BuildContext context, int index){
+            String msg = messages[index];
+            return(Text(msg));
+          },
+          itemCount: messages.length,
+
+      ),
+      bottomNavigationBar: Row(
+        children: [
+          Expanded(
+              child: TextField(
+                controller: _msgController,
+                onSubmitted: (String input){
+                  setState(() {
+                    messages.add(input);
+                  });
+                  },
+              )),
+          IconButton.filled(
+              onPressed: (){
+                setState(() {
+                  messages.add(_msgController.text);
+                });
+                },
+              icon: Icon(Icons.arrow_upward))
+        ],),);
   }
 }
 
