@@ -42,36 +42,23 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController _messageFieldController = TextEditingController();
+class _HomeScreenState extends State<HomeScreen>{
   List<String> messages = [];
+  final TextEditingController _msgController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return (Scaffold(
-      body: Placeholder(),
-      bottomNavigationBar: Column(children: [
-        Text("$messages"),
-        Row(children: [
-          Expanded(child: TextField(
-            decoration: InputDecoration(label : Text("Enter message")),
-            controller: _messageFieldController,
-            onSubmitted: (String input){
-              setState(() {
-                messages.add(input);
-              });
-            },
-          )),
-          IconButton(onPressed: (){
-            setState(() {
-              messages.add(_messageFieldController.text);
-            });
-          }, icon: Icon(Icons.send))
-        ],)
-      ],),
-    )
-    );
+    return Scaffold(body: Text("$messages"), bottomNavigationBar: Row(children: [Expanded(child: TextField(controller: _msgController, onSubmitted: (String input){
+      setState(() {
+        messages.add(input);
+      });
+    },)), IconButton.filled(onPressed: (){
+      setState(() {
+        messages.add(_msgController.text);
+      });
+    }, icon: Icon(Icons.arrow_upward))],),);
   }
 }
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
