@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main () async {
   await Supabase.initialize(
       url: 'https://qojuaxoxgmrnytovntlj.supabase.co',
-      anonKey: 'sb_publishable_fFIrjhWDciitizwlJRe4BQ_8aSvQHZ4');
+      anonKey: 'sb_publishable_LIhWkfy8LUS88qqTqeO03g_c4_eqDLt');
   runApp(MaterialApp(home: MinuteApp()));
 }
 
