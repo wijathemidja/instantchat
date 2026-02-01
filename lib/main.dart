@@ -76,11 +76,13 @@ class _HomeScreenState extends State<HomeScreen>{
                 controller: _msgController,
                 onSubmitted: (String input) async {
                   await Supabase.instance.client.from('table').insert({'message': input});
+                  _msgController.clear();
                   },
               )),
           IconButton.filled(
               onPressed: () async {
                 await Supabase.instance.client.from('table').insert({'message': _msgController.text});
+                _msgController.clear();
                 },
               icon: Icon(Icons.arrow_upward))
         ],),);
