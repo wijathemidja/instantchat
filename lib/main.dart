@@ -48,12 +48,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>{
   List<String> messages = [];
-  final _supabaseData = Supabase.instance.client.from('table').select().order('createdAt', ascending: true);
+  final _supabaseData = Supabase.instance.client.from('table').stream(primaryKey: ['id']).order('createdAt', ascending: true);
   final TextEditingController _msgController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(future: _supabaseData,
+      body: StreamBuilder(stream: _supabaseData,
           builder: (context, snapshot){
             if (!snapshot.hasData){
               return const Center(child: CircularProgressIndicator());
