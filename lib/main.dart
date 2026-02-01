@@ -16,7 +16,7 @@ class MinuteApp extends StatefulWidget {
 
 class _MinuteAppState extends State<MinuteApp> {
   int screenIndex = 0;
-  List screen = [
+  final List screen = [
     HomeScreen(),
     SettingsScreen(),
   ];
@@ -47,7 +47,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>{
-  List<String> messages = [];
   final _supabaseData = Supabase.instance.client.from('table').stream(primaryKey: ['id']).order('createdAt', ascending: true);
   final TextEditingController _msgController = TextEditingController();
   @override
@@ -98,7 +97,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Text("settings");
+    return const Text("Version : 0.0.1");
   }
 }
 
