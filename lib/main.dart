@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'apikeys.dart' as api;
+import 'package:censor_it/censor_it.dart';
 Future<void> main () async {
   await Supabase.initialize(
       url: api.url,
@@ -76,12 +77,14 @@ class _HomeScreenState extends State<HomeScreen>{
                 decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter your message here", filled: true, fillColor: Colors.white70, hoverColor: Color.fromRGBO(93, 183, 222, 1)),
                 controller: _msgController,
                 onSubmitted: (String input) async {
-                  await Supabase.instance.client.from('table').insert({'message': input});
+                  var censoredInput = CensorIt.mask(input, pattern: LanguagePattern.english);
+                  await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
                   },
               )),
           IconButton.filled(
               onPressed: () async {
-                await Supabase.instance.client.from('table').insert({'message': _msgController.text});
+                var censoredInput = CensorIt.mask(_msgController.text, pattern: LanguagePattern.english);
+                await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
                 },
               icon: Icon(Icons.arrow_upward))
         ],),);
@@ -99,7 +102,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Text("Version : 0.0.1", style: TextStyle(fontSize: 30),);
+    return const Text("Version : 0.0.1", style: TextStyle(fontSize: 25),);
   }
 }
 
