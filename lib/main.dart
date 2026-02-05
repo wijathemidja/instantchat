@@ -51,6 +51,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>{
   final _supabaseData = Supabase.instance.client.from('table').stream(primaryKey: ['id']).order('createdAt', ascending: true);
   final TextEditingController _msgController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,17 +75,23 @@ class _HomeScreenState extends State<HomeScreen>{
         children: [
           Expanded(
               child: TextField(
+                focusNode: focusNode,
+                autofocus: true,
                 decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter your message here", filled: true, fillColor: Colors.white70, hoverColor: Color.fromRGBO(93, 183, 222, 1)),
                 controller: _msgController,
                 onSubmitted: (String input) async {
                   var censoredInput = CensorIt.mask(input, pattern: LanguagePattern.english);
                   await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
+                  _msgController.clear();
+                  focusNode.requestFocus();
                   },
               )),
           IconButton.filled(
               onPressed: () async {
                 var censoredInput = CensorIt.mask(_msgController.text, pattern: LanguagePattern.english);
                 await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
+                _msgController.clear();
+                focusNode.requestFocus();
                 },
               icon: Icon(Icons.arrow_upward))
         ],),);
