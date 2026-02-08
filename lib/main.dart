@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'apikeys.dart' as api;
 import 'package:censor_it/censor_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main () async {
   await Supabase.initialize(
       url: api.url,
@@ -64,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen>{
             return (
               ListView.separated(itemCount: messagesData.length,itemBuilder: (BuildContext context, int index){
                 var messageTmp = messagesData[index]['message'];
-                return(Text("$messageTmp", style: TextStyle(fontSize: 20),));
+                var userTmp = messagesData[index]['username'];
+                return(Text("$userTmp || $messageTmp", style: TextStyle(fontSize: 20),));
               }, separatorBuilder: (BuildContext context, int index) => const Divider(),)
             );
 
@@ -81,7 +83,12 @@ class _HomeScreenState extends State<HomeScreen>{
                 controller: _msgController,
                 onSubmitted: (String input) async {
                   var censoredInput = CensorIt.mask(input, pattern: LanguagePattern.english);
-                  await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
+                  final storage = await SharedPreferences.getInstance();
+                  String usr = 'DefaultFlutterUser';
+                  if (storage.getString('username') != null){
+                    usr = storage.getString('username')!;
+                  }
+                  await Supabase.instance.client.from('table').insert({'message': censoredInput.censored, 'username' : usr});
                   _msgController.clear();
                   focusNode.requestFocus();
                   },
@@ -89,7 +96,12 @@ class _HomeScreenState extends State<HomeScreen>{
           IconButton.filled(
               onPressed: () async {
                 var censoredInput = CensorIt.mask(_msgController.text, pattern: LanguagePattern.english);
-                await Supabase.instance.client.from('table').insert({'message': censoredInput.censored});
+                final storage = await SharedPreferences.getInstance();
+                String usr = 'DefaultFlutterUser';
+                if (storage.getString('username') != null){
+                  usr = storage.getString('username')!;
+                }
+                await Supabase.instance.client.from('table').insert({'message': censoredInput.censored, 'username' : usr});
                 _msgController.clear();
                 focusNode.requestFocus();
                 },
@@ -107,9 +119,39 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  Future<void> addUsrStorage(_username) async {
+    final storage = await SharedPreferences.getInstance();
+    storage.setString('username', _username);
+  }
+  TextEditingController _UsernameController = TextEditingController();
+  Future<String> getUsr = getUsername();
   @override
   Widget build(BuildContext context) {
-    return const Text("Version : 0.0.1", style: TextStyle(fontSize: 25),);
+    return (Column(children: [Text("Version : 0.0.1", style: TextStyle(fontSize: 25),), TextField(controller: _UsernameController, onChanged: (String input) async {
+      await addUsername(_UsernameController.text);
+    },), FutureBuilder(future: getUsr, builder: (context, snapshot){
+      if (!snapshot.hasData){
+        return(CircularProgressIndicator());
+      }
+      final usernameData = snapshot.data!;
+      return(Text(usernameData));
+    })]));
   }
 }
 
+Future<String> getUsername() async{
+  final storage = await SharedPreferences.getInstance();
+  late String tempUsr;
+  if (storage.getString('username') != null){
+    tempUsr = storage.getString('username')!;
+  } else {
+    tempUsr = 'DefaultUser';
+  }
+  String username = tempUsr;
+  return(username);
+}
+
+Future<void> addUsername (username) async {
+  final storage = await SharedPreferences.getInstance();
+  storage.setString('username', username);
+}
