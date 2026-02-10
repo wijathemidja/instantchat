@@ -123,16 +123,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final storage = await SharedPreferences.getInstance();
     storage.setString('username', username);
   }
-  final TextEditingController _usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return (Column(children: [
       Text("Version : 0.0.1", style: TextStyle(fontSize: 25),),
       TextField(
         decoration: InputDecoration(label: Text('Enter your username')),
-        controller: _usernameController,
         onChanged: (String input) async {
-          await addUsername(_usernameController.text);
+          await addUsername(input);
     },),]
     ));
   }
