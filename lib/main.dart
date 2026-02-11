@@ -28,7 +28,7 @@ class _MinuteAppState extends State<MinuteApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Minute", style: TextStyle(fontSize: 30)),
+        title: Text("instantchat", style: TextStyle(fontSize: 30)),
         backgroundColor: Colors.lightBlue,
       ),
       body: screen[screenIndex],
@@ -168,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return (Column(
       children: [
-        Text("Version : 0.0.1", style: TextStyle(fontSize: 25)),
+        Text("Version : 0.1.0", style: TextStyle(fontSize: 25)),
         TextField(
           decoration: InputDecoration(label: Text('Enter your username')),
           onChanged: (String input) async {
