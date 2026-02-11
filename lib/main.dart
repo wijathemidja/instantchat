@@ -239,7 +239,7 @@ Row? ConditionalRowSUSI(Session? session){
             children: [
               FilledButton(
                   onPressed: () async {
-                    User? user = await signUp(LoginemailController.text, LoginpasswordController.text);
+                    SBuser = await signUp(LoginemailController.text, LoginpasswordController.text);
                   },
                   child: Text("Sign Up")),
               FilledButton(
